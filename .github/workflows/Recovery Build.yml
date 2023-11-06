@@ -130,6 +130,19 @@ jobs:
         if_true: twrp
         if_false: omni
 
+    - name: Setup Build Environment and Build
+      run: |
+        cd ${{ steps.pwd.outputs.workspace-folder }}
+        source build/envsetup.sh
+        export ALLOW_MISSING_DEPENDENCIES=true
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng
+        make clean
+        make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        shell: /usr/bin/bash -e {0}
+      env:
+        JAVA_HOME: /opt/hostedtoolcache/Java_Zulu_jdk/8.0.392-8/x64
+        JAVA_HOME_8_X64: /opt/hostedtoolcache/Java_Zulu_jdk/8.0.392-8/x64
+
     - name: Sync Device Dependencies
       run: |
         bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
