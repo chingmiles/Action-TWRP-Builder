@@ -138,7 +138,10 @@ jobs:
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 12
-
+          
+      - name: List workspace directory
+        run: ls -alh ${{ steps.pwd.outputs.workspace-folder }}
+  
       - name: Vendor Setup
         run: |
           sed -i 's/COMMON_LUNCH_CHOICES :=/COMMON_LUNCH_CHOICES=/' device/samsung/a54x/vendorsetup.sh
